@@ -201,7 +201,7 @@ export default function Home() {
   }, [month, year]);
 
   function currentMonth() {
-    setMonth(moment().month());
+    setMonth(moment().month() + 1);
     setYear(moment().year());
   }
 
