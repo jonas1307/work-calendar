@@ -224,8 +224,8 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen items-center px-4 w-1/3 mx-auto">
-      <div className="flex justify-between items-center mb-4">
+    <main className="min-h-screen items-center px-2 lg:mx-8 mx-auto">
+      <div className="flex justify-between flex-col-reverse py-2 lg:flex-row gap-y-1 lg:gap-y-0 items-center mb-4">
         <h1 className="font-bold text-4xl">{displayDate}</h1>
 
         <div className="flex gap-2">
