@@ -4,7 +4,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const holidays = (year) => {
+const brHolidays = (year) => {
   var epochDate = moment("18990101", "YYYYMMDD");
   return [
     {
@@ -136,7 +136,7 @@ const calculateCalendar = (year, month) => {
 
 const monthInfos = (year, month) => {
   const calendar = calculateCalendar(year, month);
-  const hollidays = holidays(year).filter((x) => x.month === month);
+  const monthHolidays = brHolidays(year).filter((x) => x.month === month);
 
   var weekDays = calendar.filter(
     (x) => x.dayOfWeekIndex > 0 && x.dayOfWeekIndex < 6
@@ -146,7 +146,7 @@ const monthInfos = (year, month) => {
     (x) => x.dayOfWeekIndex === 0 || x.dayOfWeekIndex === 6
   );
 
-  const hollidaysInWeekdays = hollidays.map((x) =>
+  const holidaysInWeekdays = monthHolidays.map((x) =>
     weekDays.reduce((count, y) => {
       if (y.epoch === x.epoch) {
         return (count += 1);
@@ -155,7 +155,7 @@ const monthInfos = (year, month) => {
     }, 0)
   );
 
-  const hollidaysInWeekends = hollidays.map((x) =>
+  const holidaysInWeekends = monthHolidays.map((x) =>
     weekendDays.reduce((count, y) => {
       if (y.epoch === x.epoch) {
         return (count += 1);
@@ -168,12 +168,12 @@ const monthInfos = (year, month) => {
     totalDays: calendar.length,
     weekDays: weekDays.length,
     weekendDays: weekendDays.length,
-    hollidays: hollidays.length,
-    hollidaysInWeekdays: hollidaysInWeekdays.reduce(
+    holidays: monthHolidays.length,
+    holidaysInWeekdays: holidaysInWeekdays.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
     ),
-    hollidaysInWeekends: hollidaysInWeekends.reduce(
+    holidaysInWeekends: holidaysInWeekends.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
     ),
@@ -184,7 +184,7 @@ export default function Home() {
   let [month, setMonth] = useState(moment().month() + 1);
   let [year, setYear] = useState(moment().year());
   let [calendar, setCalendar] = useState([]);
-  let [hollidays, setHollidays] = useState([]);
+  let [holidays, setHolidays] = useState([]);
   let [infos, setInfos] = useState(null);
   let [displayDate, setDisplayDate] = useState("");
 
@@ -197,7 +197,7 @@ export default function Home() {
     setDisplayDate(newDisplayDate);
     setCalendar(calculateCalendar(year, month));
     setInfos(monthInfos(year, month));
-    setHollidays(holidays(year).filter((x) => x.month === month));
+    setHolidays(brHolidays(year).filter((x) => x.month === month));
   }, [month, year]);
 
   function currentMonth() {
@@ -253,17 +253,17 @@ export default function Home() {
         {infos !== null && (
           <div className="mb-4">
             <p>Days in month: {infos.totalDays}</p>
-            <p>Working days: {infos.weekDays - infos.hollidaysInWeekdays}</p>
+            <p>Working days: {infos.weekDays - infos.holidaysInWeekdays}</p>
             <p>Week days: {infos.weekDays}</p>
             <p>Weekend days: {infos.weekendDays}</p>
-            <p>Hollidays during the week: {infos.hollidaysInWeekdays}</p>
-            <p>Hollidays during the weekend: {infos.hollidaysInWeekends}</p>
+            <p>Holidays during the week: {infos.holidaysInWeekdays}</p>
+            <p>Holidays during the weekend: {infos.holidaysInWeekends}</p>
           </div>
         )}
-        {hollidays.length > 0 && (
+        {holidays.length > 0 && (
           <div>
-            <h1 className="mb-2 font-bold text-xl">Next hollidays</h1>
-            {hollidays.map((x) => (
+            <h1 className="mb-2 font-bold text-xl">Next holidays</h1>
+            {holidays.map((x) => (
               <p key={uuidv4()}>
                 {x.moment.format("DD/MM/YYYY - dddd")} - {x.name}
               </p>
